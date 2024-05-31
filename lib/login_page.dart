@@ -1,3 +1,5 @@
+import 'dart:html';
+
 import 'package:flutter/material.dart';
 import 'dashboard.dart'; // Import for navigation
 
@@ -12,13 +14,14 @@ class _LoginPageState extends State<LoginPage> {
   final _formKey = GlobalKey<FormState>();
   String _email = '';
   String _password = '';
+  bool _passwordVisible = false;
 
   void _navigateToDashboard() {
     // Replace with your actual authentication logic (if needed)
     // For now, assume successful login
     Navigator.pushReplacement(
       context,
-      MaterialPageRoute(builder: (context) => DashboardScreen()),
+      MaterialPageRoute(builder: (context) => CampusPalDashboard()),
     );
   }
 
@@ -81,50 +84,80 @@ class _LoginPageState extends State<LoginPage> {
                           return null;
                         },
                         onSaved: (value) => _email = value!,
-                        decoration: const InputDecoration(
+                        decoration: InputDecoration(
                           labelText: 'University Email *',
                           prefixIcon: Icon(Icons.email),
+                          filled: true,
+                          fillColor: Colors.white,
+                          contentPadding: EdgeInsets.fromLTRB(12.0, 12.0, 12.0, 12.0),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(5.0),
+                            borderSide: BorderSide(color: Colors.grey.shade300, width: 1.0),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(5.0),
+                            borderSide: BorderSide(color: Colors.grey.shade400, width: 1.5),
+                          ),
                         ),
                       ),
                       const SizedBox(height: 10.0),
                       TextFormField(
-                        obscureText: true, // Password field
-                        validator: (value) {
+                        obscureText: !_passwordVisible,
+                        validator:(value) {
                           if (value!.isEmpty) {
                             return 'Please enter your password';
                           }
                           return null;
                         },
                         onSaved: (value) => _password = value!,
-                        decoration: const InputDecoration(
-                          labelText: 'University Password',
+                        decoration: InputDecoration(
+                          labelText: 'Password *',
                           prefixIcon: Icon(Icons.lock),
-                        ),
-                      ),
-                      const SizedBox(height: 20.0),
-                      ElevatedButton(
-                        onPressed: () {
-                          if (_formKey.currentState!.validate()) {
-                            _formKey.currentState!.save();
-                            _navigateToDashboard();
-                          }
-                        },
-                        child: const Text(
-                          'LOGIN',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 16.0,
+                          suffixIcon: IconButton(
+                            icon: Icon(_passwordVisible ? Icons.visibility : Icons.visibility_off),
+                            onPressed: () {
+                              setState(() {
+                                _passwordVisible = !_passwordVisible;
+                              });
+                            },
+                          ),
+                          filled: true,
+                          fillColor: Colors.white,
+                          contentPadding: EdgeInsets.fromLTRB(12.0, 12.0, 12.0, 12.0),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(5.0),
+                            borderSide: BorderSide(color: Colors.grey.shade300, width: 1.0),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(5.0),
+                            borderSide: BorderSide(color: Colors.grey.shade400, width: 1.5),
                           ),
                         ),
-                        style: ElevatedButton.styleFrom(
-                          fixedSize: const Size(335.0, 48.0),
-                          padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(2.0),
-                          ),
-                          primary: Colors.red[800]!, // Adjust color based on #9b3e3e
-                        ),
                       ),
+                      const SizedBox(height: 30.0),
+                      SizedBox(
+  width: double.infinity,
+  child: Theme(
+    data: Theme.of(context).copyWith(
+      elevatedButtonTheme: ElevatedButtonThemeData(
+        style: ElevatedButton.styleFrom(
+          primary: Colors.red, // Change this to the desired red color
+          onPrimary: Colors.white,
+          textStyle: TextStyle(fontSize: 18.0),
+        ),
+      ),
+    ),
+    child: ElevatedButton(
+      onPressed: () {
+        if (_formKey.currentState!.validate()) {
+          _formKey.currentState!.save();
+          _navigateToDashboard();
+        }
+      },
+      child: Text('Login'),
+    ),
+  ),
+),
                     ],
                   ),
                 ),
