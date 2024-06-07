@@ -1,7 +1,8 @@
-import 'dart:html';
-
+import 'package:final_year_project/signup.dart';
+import 'api_service.dart';
 import 'package:flutter/material.dart';
-import 'dashboard.dart'; // Import for navigation
+import 'dashboard.dart';
+import 'forgetpassword.dart'; // Import for navigation
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -15,11 +16,12 @@ class _LoginPageState extends State<LoginPage> {
   String _email = '';
   String _password = '';
   bool _passwordVisible = false;
+  ApiService _apiService = ApiService();
 
   void _navigateToDashboard() {
     // Replace with your actual authentication logic (if needed)
     // For now, assume successful login
-    Navigator.pushReplacement(
+    Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => CampusPalDashboard()),
     );
@@ -135,29 +137,72 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                       ),
                       const SizedBox(height: 30.0),
-                      SizedBox(
-  width: double.infinity,
-  child: Theme(
-    data: Theme.of(context).copyWith(
-      elevatedButtonTheme: ElevatedButtonThemeData(
-        style: ElevatedButton.styleFrom(
-          primary: Colors.red, // Change this to the desired red color
-          onPrimary: Colors.white,
-          textStyle: TextStyle(fontSize: 18.0),
-        ),
-      ),
-    ),
-    child: ElevatedButton(
-      onPressed: () {
-        if (_formKey.currentState!.validate()) {
-          _formKey.currentState!.save();
-          _navigateToDashboard();
-        }
-      },
-      child: Text('Login'),
-    ),
-  ),
-),
+                       SizedBox(
+                        width: double.infinity,
+                        child: Theme(
+                          data: Theme.of(context).copyWith(
+                            elevatedButtonTheme: ElevatedButtonThemeData(
+                              style: ElevatedButton.styleFrom(
+                                primary: Colors.red, // Change this to the desired red color
+                                onPrimary: Colors.white,
+                                textStyle: TextStyle(fontSize: 18.0),
+                              ),
+                            ),
+                          ),
+                          child: ElevatedButton(
+                            onPressed: () async {
+                              if (_formKey.currentState!.validate()) {
+                                _formKey.currentState!.save();
+                                try {
+                                  await _apiService.login(_email, _password);
+                                    _navigateToDashboard();
+                                    } catch (e) {
+                                      // Handle login exception
+                                      print('Login failed: $e');
+                                    }
+                                  }
+                                },
+                            child: Text('Login'),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 10.0),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Text(
+                            'Don\'t have an account? ',
+                            style: TextStyle(fontSize: 16.0, color: Colors.black),
+                          ),
+                          GestureDetector(
+                            onTap: () async {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(builder: (context) => SignUp()),
+                              );
+                            },
+                            child: Text(
+                              'Sign Up',
+                              style: TextStyle(fontSize: 16.0, color: Theme.of(context).primaryColor),
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 20.0),
+                      Center(
+                        child: InkWell(
+                          onTap: () async {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => ForgotPassword()),
+                            );
+                          },
+                          child: Text(
+                            'Forgot Password?',
+                            style: TextStyle(fontSize: 16.0, color: Theme.of(context).primaryColor),
+                          ),
+                        ),
+                      ),
                     ],
                   ),
                 ),
