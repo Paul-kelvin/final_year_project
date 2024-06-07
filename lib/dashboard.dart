@@ -1,12 +1,8 @@
 import 'dart:html';
-
+import 'profilepage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart'; // For SVG icons
 import 'login_page.dart';
-
-void main() {
-  runApp(CampusPalApp());
-}
 
 class CampusPalApp extends StatelessWidget {
   @override
@@ -23,6 +19,8 @@ class CampusPalApp extends StatelessWidget {
 }
 
 class CampusPalDashboard extends StatefulWidget {
+  const CampusPalDashboard({Key? key}) : super(key: key);
+
   @override
   _CampusPalDashboardState createState() => _CampusPalDashboardState();
 }
@@ -236,14 +234,22 @@ class _CampusPalDashboardState extends State<CampusPalDashboard> {
       ),
       drawer: _buildDrawer(), // Add the drawer widget
       bottomNavigationBar: BottomNavigationBar(
-        items:[
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home', backgroundColor: Colors.red[400],),
-          BottomNavigationBarItem(icon: Icon(Icons.explore), label: 'Discover'),
-          BottomNavigationBarItem(icon: Icon(Icons.add), label: 'Add'),
-          BottomNavigationBarItem(icon: Icon(Icons.notifications), label: 'Notifications'),
-          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
-        ],
-      ),
+  items:[
+    BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home', backgroundColor: Colors.red[400]),
+    BottomNavigationBarItem(icon: Icon(Icons.explore), label: 'Discover', backgroundColor: Colors.red[400]),
+    BottomNavigationBarItem(icon: Icon(Icons.add), label: 'Add', backgroundColor: Colors.white),
+    BottomNavigationBarItem(icon: Icon(Icons.notifications), label: 'Notifications',backgroundColor: Colors.red[400]),
+    BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile', backgroundColor: Colors.red[400]),
+  ],
+  onTap: (index) {
+    if (index == 4) {
+      Navigator.push(
+        context, 
+        MaterialPageRoute(builder: (context) => ProfileScreen()),
+      );
+    }
+  },
+),
     );
   }
 
